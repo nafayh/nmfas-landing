@@ -12,6 +12,10 @@ export default function Home() {
   const [feedback, setFeedback] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  // Add state for search results
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   function validate() {
     const errs = {};
     if (!form.name.trim()) errs.name = 'Name is required';
@@ -39,118 +43,302 @@ export default function Home() {
     }, 1200);
   }
 
+  // Function to handle search
+  const handleFuneralSearch = () => {
+    if (searchQuery.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Navbar />
       <main>
         {/* Hero Section */}
         <section className={styles.hero}>
-          <h1>National Muslim Financial Advisory Service</h1>
-          <p>Professional financial guidance aligned with Islamic principles</p>
-          <button className={styles.getStartedBtn}>Get Free Consultation</button>
+          <h1>Difficult Times, Made Easier</h1>
+          <p>Find Muslim funeral services, cemeteries, and support in your area</p>
+          
+          {/* Search container */}
+          <div className={styles.searchContainer}>
+            <div className={styles.searchBox}>
+              <h3>Find a Funeral Service</h3>
+              <div className={styles.searchInputGroup}>
+                <input 
+                  type="text" 
+                  placeholder="Enter your city or postcode"
+                  className={styles.searchInput}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleFuneralSearch()}
+                />
+                <button className={styles.searchBtn} onClick={handleFuneralSearch}>Search</button>
+              </div>
+            </div>
+
+            <div className={styles.searchBox}>
+              <h3>Find a Cemetery</h3>
+              <div className={styles.searchInputGroup}>
+                <input 
+                  type="text" 
+                  placeholder="Enter your city or postcode"
+                  className={styles.searchInput}
+                />
+                <button className={styles.searchBtn}>Search</button>
+              </div>
+            </div>
+
+            <div className={styles.searchBox}>
+              <h3>Find Registry Office</h3>
+              <a href="https://www.gov.uk/register-offices" className={styles.searchLink}>
+                <div className={styles.searchInputGroup}>
+                  <input 
+                    type="text" 
+                    placeholder="Visit gov.uk website"
+                    className={styles.searchInput}
+                    disabled
+                  />
+                  <button className={styles.searchBtn}>Visit Gov.uk</button>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* General Guides Section */}
+        <section className={styles.guides}>
+            <h2>General Guides</h2>
+            <div className={styles.guidesGrid}>
+              <div className={styles.guideCard}>
+                <h3>Coroners and Post Mortems</h3>
+                <p>Understanding the role of coroners and what happens during a post-mortem examination.</p>
+                <a href="#" className={styles.readMore}>Read More →</a>
+              </div>
+              <div className={styles.guideCard}>
+                <h3>Death Referred to Coroners</h3>
+                <p>Learn about when and why deaths are referred to coroners and what to expect.</p>
+                <a href="#" className={styles.readMore}>Read More →</a>
+              </div>
+              <div className={styles.guideCard}>
+                <h3>6 Steps to Avoid a Post-Mortem</h3>
+                <p>Important steps you can take to potentially avoid an invasive post-mortem.</p>
+                <a href="#" className={styles.readMore}>Read More →</a>
+              </div>
+              <div className={styles.guideCard}>
+                <h3>Alternative to Post-Mortem</h3>
+                <p>Explore alternative options to traditional post-mortem examinations.</p>
+                <a href="#" className={styles.readMore}>Read More →</a>
+              </div>
+            </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className={styles.testimonials}>
+          <h2>What People Say</h2>
+          <div className={styles.testimonialGrid}>
+            <div className={styles.testimonialCard}>
+              <div className={styles.testimonialContent}>
+                <p>"NMFAS is a fantastic resource for Muslims across the UK. It aims to provide useful information in an easy-to-understand format for people who are going through the most difficult time."</p>
+              </div>
+              <div className={styles.testimonialAuthor}>
+                <div className={styles.authorInfo}>
+                  <strong>Iqbal Nasim</strong>
+                  <span>MBE</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.testimonialCard}>
+              <div className={styles.testimonialContent}>
+                <p>"NMFAS is a valuable resource for the UK muslim community. The website enabled us to plan ahead and put in place funeral planning arrangements which meant we were able to concentrate on looking after our loved one."</p>
+              </div>
+              <div className={styles.testimonialAuthor}>
+                <div className={styles.authorInfo}>
+                  <strong>Shahan Jamil</strong>
+                  <span>Lawyer</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.testimonialCard}>
+              <div className={styles.testimonialContent}>
+                <p>"I just wanted to say how useful this resource was. I was confused about the process but it is now much clearer. Thanks so much for making this resource."</p>
+              </div>
+              <div className={styles.testimonialAuthor}>
+                <div className={styles.authorInfo}>
+                  <strong>Nargis A.</strong>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* About Section */}
         <section id="about" className={styles.about}>
-          <h2>About Us</h2>
-          <div className={styles.aboutContent}>
-            <div className={styles.aboutText}>
-              <p>NMFAS provides expert financial advisory services that respect Islamic principles while maximizing your financial potential. Our team of experienced advisors combines modern financial expertise with deep understanding of Islamic finance.</p>
-              <ul>
-                <li>Shariah-compliant financial solutions</li>
-                <li>Expert guidance and support</li>
-                <li>Personalized financial strategies</li>
-              </ul>
-            </div>
-            <div className={styles.aboutImage}>
-              <Image src="/globe.svg" alt="Global Reach" width={400} height={400} />
+          <div className={styles.sectionWrapper}>
+            <h2>About Us</h2>
+            <div className={styles.aboutContent}>
+              <div className={styles.aboutText}>
+                <p>NMFAS provides expert financial advisory services that respect Islamic principles while maximizing your financial potential. Our team of experienced advisors combines modern financial expertise with deep understanding of Islamic finance.</p>
+                <ul>
+                  <li>Shariah-compliant financial solutions</li>
+                  <li>Expert guidance and support</li>
+                  <li>Personalized financial strategies</li>
+                </ul>
+              </div>
+              <div className={styles.aboutImage}>
+                <Image src="/globe.svg" alt="Global Reach" width={400} height={400} />
+              </div>
             </div>
           </div>
         </section>
 
         {/* Services Section */}
         <section id="services" className={styles.services}>
-          <h2>Our Services</h2>
-          <div className={styles.serviceGrid}>
-            <div className={styles.serviceCard}>
-              <Image src="/window.svg" alt="Investment" width={50} height={50} />
-              <h3>Islamic Investments</h3>
-              <p>Shariah-compliant investment opportunities for wealth growth</p>
-            </div>
-            <div className={styles.serviceCard}>
-              <Image src="/file.svg" alt="Planning" width={50} height={50} />
-              <h3>Financial Planning</h3>
-              <p>Comprehensive financial planning aligned with Islamic values</p>
-            </div>
-            <div className={styles.serviceCard}>
-              <Image src="/window.svg" alt="Consultation" width={50} height={50} />
-              <h3>Expert Consultation</h3>
-              <p>One-on-one guidance from Islamic finance experts</p>
+          <div className={styles.sectionWrapper}>
+            <h2>Our Services</h2>
+            <div className={styles.serviceGrid}>
+              <div className={styles.serviceCard}>
+                <Image src="/window.svg" alt="Investment" width={50} height={50} />
+                <h3>Islamic Investments</h3>
+                <p>Shariah-compliant investment opportunities for wealth growth</p>
+              </div>
+              <div className={styles.serviceCard}>
+                <Image src="/file.svg" alt="Planning" width={50} height={50} />
+                <h3>Financial Planning</h3>
+                <p>Comprehensive financial planning aligned with Islamic values</p>
+              </div>
+              <div className={styles.serviceCard}>
+                <Image src="/window.svg" alt="Consultation" width={50} height={50} />
+                <h3>Expert Consultation</h3>
+                <p>One-on-one guidance from Islamic finance experts</p>
+              </div>
             </div>
           </div>
         </section>
 
         {/* FAQs Section */}
         <section id="faqs" className={styles.faqs}>
-          <h2>Frequently Asked Questions</h2>
-          <div className={styles.faqGrid}>
-            <details className={styles.faqItem}>
-              <summary>What is Islamic financial planning?</summary>
-              <p>Islamic financial planning ensures your investments and financial decisions comply with Shariah principles while helping you achieve your financial goals.</p>
-            </details>
-            <details className={styles.faqItem}>
-              <summary>How do I get started?</summary>
-              <p>Simply book a free consultation with our experts who will guide you through our services and help create a personalized financial plan.</p>
-            </details>
-            <details className={styles.faqItem}>
-              <summary>What makes NMFAS different?</summary>
-              <p>We combine modern financial expertise with deep understanding of Islamic principles, providing solutions that are both effective and Shariah-compliant.</p>
-            </details>
+          <div className={styles.sectionWrapper}>
+            <h2>Frequently Asked Questions</h2>
+            <div className={styles.faqGrid}>
+              <details className={styles.faqItem}>
+                <summary>What is Islamic financial planning?</summary>
+                <p>Islamic financial planning ensures your investments and financial decisions comply with Shariah principles while helping you achieve your financial goals.</p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>How do I get started?</summary>
+                <p>Simply book a free consultation with our experts who will guide you through our services and help create a personalized financial plan.</p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>What makes NMFAS different?</summary>
+                <p>We combine modern financial expertise with deep understanding of Islamic principles, providing solutions that are both effective and Shariah-compliant.</p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>What services does NMFAS provide for bereaved families?</summary>
+                <p>NMFAS provides comprehensive support for bereaved families including guidance on funeral arrangements, cemetery locations, post-mortem alternatives, and dealing with coroners. We also help with paperwork and registration processes.</p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>How quickly can funeral arrangements be made?</summary>
+                <p>We understand the Islamic requirement for swift burial. Our network of funeral services can typically arrange funerals within 24-48 hours, subject to necessary documentation and coroner approval if required.</p>
+              </details>
+              <details className={styles.faqItem}>
+                <summary>Do you offer services across the UK?</summary>
+                <p>Yes, NMFAS has a nationwide network of funeral services, cemeteries, and support services. We can assist families anywhere in the UK through our extensive network of partners.</p>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        {/* Affiliates Section */}
+        <section className={styles.affiliates}>
+          <h2>Our Trusted Partners</h2>
+          <div className={styles.affiliateGrid}>
+            <div className={styles.affiliateCard}>
+              <h3>Funeral Services</h3>
+              <ul>
+                <li>Gardens of Peace</li>
+                <li>Muslim Burial Council</li>
+                <li>Green Lane Masjid Funeral Service</li>
+                <li>East London Mosque Funeral Service</li>
+                <li>Hadayat ul Muslimeen Mosque<br />
+                    <small>19 Humphrey Road, Manchester M16 9DD<br />
+                    Tel: 07958 908882<br />
+                    <a href="http://www.masjidehidayah.org.uk" target="_blank">www.masjidehidayah.org.uk</a></small>
+                </li>
+                <li>Faizan e Islam - Funeral Services<br />
+                    <small>229 Ayres Road, Manchester M16 0NL<br />
+                    Tel: 0161 877 4827, 0208 281 7359<br />
+                    Email: <a href="mailto:funeral@faizaneislam.com">funeral@faizaneislam.com</a><br />
+                    <a href="http://www.faizaneislam.com" target="_blank">faizaneislam.com</a></small>
+                </li>
+              </ul>
+            </div>
+            <div className={styles.affiliateCard}>
+              <h3>Cemetery Partners</h3>
+              <ul>
+                <li>Gardens of Peace Muslim Cemetery</li>
+                <li>Eternal Gardens</li>
+                <li>Five Ways Muslim Cemetery</li>
+                <li>Muslim Burial Ground Peace Garden</li>
+              </ul>
+            </div>
+            <div className={styles.affiliateCard}>
+              <h3>Support Organizations</h3>
+              <ul>
+                <li>Muslim Council of Britain</li>
+                <li>Islamic Cultural Centre</li>
+                <li>Muslim Aid UK</li>
+                <li>National Association of Muslim Police</li>
+              </ul>
+            </div>
           </div>
         </section>
 
         {/* Contact Section */}
         <section id="contact" className={styles.contact}>
-          <h2>Contact Us</h2>
-          <div className={styles.contactForm}>
-            <form onSubmit={handleSubmit} noValidate>
-              <input
-                type="text"
-                placeholder="Your Name"
-                value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                aria-label="Your Name"
-                aria-invalid={!!errors.name}
-                className={errors.name ? styles.inputError : ''}
-                required
-              />
-              {errors.name && <div className={styles.formError}>{errors.name}</div>}
-              <input
-                type="email"
-                placeholder="Your Email"
-                value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                aria-label="Your Email"
-                aria-invalid={!!errors.email}
-                className={errors.email ? styles.inputError : ''}
-                required
-              />
-              {errors.email && <div className={styles.formError}>{errors.email}</div>}
-              <textarea
-                placeholder="Your Message"
-                value={form.message}
-                onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                aria-label="Your Message"
-                aria-invalid={!!errors.message}
-                className={errors.message ? styles.inputError : ''}
-                required
-              />
-              {errors.message && <div className={styles.formError}>{errors.message}</div>}
-              <button type="submit" disabled={submitting}>
-                {submitting ? 'Sending...' : 'Send Message'}
-              </button>
-              {feedback && <div className={styles.formSuccess}>{feedback}</div>}
-            </form>
+          <div className={styles.sectionWrapper}>
+            <h2>Contact Us</h2>
+            <div className={styles.contactForm}>
+              <form onSubmit={handleSubmit} noValidate>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  aria-label="Your Name"
+                  aria-invalid={!!errors.name}
+                  className={errors.name ? styles.inputError : ''}
+                  required
+                />
+                {errors.name && <div className={styles.formError}>{errors.name}</div>}
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  value={form.email}
+                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  aria-label="Your Email"
+                  aria-invalid={!!errors.email}
+                  className={errors.email ? styles.inputError : ''}
+                  required
+                />
+                {errors.email && <div className={styles.formError}>{errors.email}</div>}
+                <textarea
+                  placeholder="Your Message"
+                  value={form.message}
+                  onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                  aria-label="Your Message"
+                  aria-invalid={!!errors.message}
+                  className={errors.message ? styles.inputError : ''}
+                  required
+                />
+                {errors.message && <div className={styles.formError}>{errors.message}</div>}
+                <button type="submit" disabled={submitting}>
+                  {submitting ? 'Sending...' : 'Send Message'}
+                </button>
+                {feedback && <div className={styles.formSuccess}>{feedback}</div>}
+              </form>
+            </div>
           </div>
         </section>
       </main>
@@ -159,34 +347,66 @@ export default function Home() {
         <div className={styles.footerContent}>
           <div className={styles.footerSection}>
             <h3>NMFAS</h3>
-            <p>Professional Islamic Financial Advisory Services</p>
+            <p>Professional Muslim Funeral Advisory Services</p>
+            <div className={styles.socialLinks}>
+              <a href="#"><i className="fab fa-facebook"></i></a>
+              <a href="#"><i className="fab fa-twitter"></i></a>
+              <a href="#"><i className="fab fa-instagram"></i></a>
+            </div>
           </div>
+
           <div className={styles.footerSection}>
-            <h4>Quick Links</h4>
-            <a href="#about">About Us</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
+            <h4>Recent Posts</h4>
+            <div className={styles.recentPosts}>
+              <a href="#">
+                <article className={styles.recentPost}>
+                  <h5>Understanding Islamic Funeral Practices</h5>
+                  <span>May 15, 2025</span>
+                </article>
+              </a>
+              <a href="#">
+                <article className={styles.recentPost}>
+                  <h5>Guide to Muslim Cemetery Locations</h5>
+                  <span>May 12, 2025</span>
+                </article>
+              </a>
+              <a href="#">
+                <article className={styles.recentPost}>
+                  <h5>Supporting Bereaved Families</h5>
+                  <span>May 8, 2025</span>
+                </article>
+              </a>
+            </div>
           </div>
+
+          <div className={styles.footerSection}>
+            <h4>Helpful Links</h4>
+            <div className={styles.helpfulLinks}>
+              <div className={styles.linkColumn}>
+                <h5>Resources</h5>
+                <a href="#">Funeral Guide</a>
+                <a href="#">Death Registration</a>
+                <a href="#">Burial Services</a>
+                <a href="#">Islamic Will</a>
+              </div>
+              <div className={styles.linkColumn}>
+                <h5>Support</h5>
+                <a href="#">FAQ</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Find a Service</a>
+                <a href="#">Emergency Help</a>
+              </div>
+            </div>
+          </div>
+
           <div className={styles.footerSection}>
             <h4>Contact Info</h4>
             <p>Email: info@nmfas.org.uk</p>
-            <p>Phone: +44 (0)20 1234 5678</p>
+            <p>Emergency: 0800-NMFAS-247</p>
+            <p>Available 24/7 for support</p>
           </div>
         </div>
-        <div className={styles.socialLinks}>
-          <a href="https://linkedin.com/company/nmfas" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
-            LinkedIn
-          </a>
-          <a href="https://twitter.com/nmfas" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
-            Twitter
-          </a>
-          <a href="https://facebook.com/nmfas" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02c0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89c1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7C18.34 21.21 22 17.06 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg>
-            Facebook
-          </a>
-        </div>
+        
         <div className={styles.footerBottom}>
           <p>&copy; 2025 NMFAS. All rights reserved.</p>
         </div>
