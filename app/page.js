@@ -1,3 +1,45 @@
+        {/* Affiliates Section */}
+        <section className={styles.affiliates}>
+          <h2>Affiliated Organizations</h2>
+          <div className={styles.affiliateGrid}>
+            <div className={styles.affiliateCard}>
+              <h3>Funeral Services</h3>
+              <ul>
+                <li><a href="https://www.gardensofpeace.org.uk/" target="_blank" rel="noopener noreferrer">Gardens of Peace</a></li>
+                <li><a href="https://www.mbcc.org.uk/" target="_blank" rel="noopener noreferrer">Muslim Burial Council of Leicestershire</a></li>
+                <li><a href="https://www.greenlanemasjid.org/services/funeral/" target="_blank" rel="noopener noreferrer">Green Lane Masjid Funeral Service</a></li>
+                <li><a href="https://www.eastlondonmosque.org.uk/funeral-service/" target="_blank" rel="noopener noreferrer">East London Mosque Funeral Service</a></li>
+                <li><a href="https://www.masjidehidayah.org.uk/" target="_blank" rel="noopener noreferrer">Hadayat ul Muslimeen Mosque</a><br />
+                  <small>19 Humphrey Road, Manchester M16 9DD<br />
+                  Tel: 07958 908882</small>
+                </li>
+                <li><a href="https://www.faizaneislam.com/" target="_blank" rel="noopener noreferrer">Faizan e Islam - Funeral Services</a><br />
+                  <small>229 Ayres Road, Manchester M16 0NL<br />
+                  Tel: 0161 877 4827, 0208 281 7359<br />
+                  Email: <a href="mailto:funeral@faizaneislam.com">funeral@faizaneislam.com</a></small>
+                </li>
+              </ul>
+            </div>
+            <div className={styles.affiliateCard}>
+              <h3>Cemetery Partners</h3>
+              <ul>
+                <li><a href="https://www.gardensofpeace.org.uk/" target="_blank" rel="noopener noreferrer">Gardens of Peace Muslim Cemetery</a></li>
+                <li><a href="https://eternalgardens.org.uk/" target="_blank" rel="noopener noreferrer">Eternal Gardens</a></li>
+                <li>Five Ways Muslim Cemetery</li>
+                <li>Muslim Burial Ground Peace Garden</li>
+              </ul>
+            </div>
+            <div className={styles.affiliateCard}>
+              <h3>Support Organizations</h3>
+              <ul>
+                <li><a href="https://www.mcb.org.uk/" target="_blank" rel="noopener noreferrer">Muslim Council of Britain</a></li>
+                <li><a href="https://www.iccuk.org/" target="_blank" rel="noopener noreferrer">Islamic Cultural Centre</a></li>
+                <li><a href="https://www.muslimaid.org/" target="_blank" rel="noopener noreferrer">Muslim Aid UK</a></li>
+                <li><a href="https://www.namp-uk.org/" target="_blank" rel="noopener noreferrer">National Association of Muslim Police</a></li>
+              </ul>
+            </div>
+          </div>
+        </section>
 "use client";
 
 import Image from 'next/image';
@@ -250,50 +292,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Affiliates Section */}
-        <section className={styles.affiliates}>
-          <h2>Our Trusted Partners</h2>
-          <div className={styles.affiliateGrid}>
-            <div className={styles.affiliateCard}>
-              <h3>Funeral Services</h3>
-              <ul>
-                <li>Gardens of Peace</li>
-                <li>Muslim Burial Council</li>
-                <li>Green Lane Masjid Funeral Service</li>
-                <li>East London Mosque Funeral Service</li>
-                <li>Hadayat ul Muslimeen Mosque<br />
-                    <small>19 Humphrey Road, Manchester M16 9DD<br />
-                    Tel: 07958 908882<br />
-                    <a href="http://www.masjidehidayah.org.uk" target="_blank">www.masjidehidayah.org.uk</a></small>
-                </li>
-                <li>Faizan e Islam - Funeral Services<br />
-                    <small>229 Ayres Road, Manchester M16 0NL<br />
-                    Tel: 0161 877 4827, 0208 281 7359<br />
-                    Email: <a href="mailto:funeral@faizaneislam.com">funeral@faizaneislam.com</a><br />
-                    <a href="http://www.faizaneislam.com" target="_blank">faizaneislam.com</a></small>
-                </li>
-              </ul>
-            </div>
-            <div className={styles.affiliateCard}>
-              <h3>Cemetery Partners</h3>
-              <ul>
-                <li>Gardens of Peace Muslim Cemetery</li>
-                <li>Eternal Gardens</li>
-                <li>Five Ways Muslim Cemetery</li>
-                <li>Muslim Burial Ground Peace Garden</li>
-              </ul>
-            </div>
-            <div className={styles.affiliateCard}>
-              <h3>Support Organizations</h3>
-              <ul>
-                <li>Muslim Council of Britain</li>
-                <li>Islamic Cultural Centre</li>
-                <li>Muslim Aid UK</li>
-                <li>National Association of Muslim Police</li>
-              </ul>
-            </div>
-          </div>
-        </section>
+
 
         {/* Contact Section */}
         <section id="contact" className={styles.contact}>

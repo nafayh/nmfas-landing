@@ -66,6 +66,7 @@ export const funeralServices = [
     website: 'eternalgarden.org.uk',
     region: 'West Sussex',
     type: 'Cemetery & Funeral Service'
+
   },
   {
     name: 'Faizan e Islam - Funeral Services',
@@ -76,6 +77,7 @@ export const funeralServices = [
     website: 'faizaneislam.com',
     region: 'Manchester',
     type: 'Funeral Service'
+    
   },
   {
     name: 'Gardens of Peace Muslim Cemetery',
