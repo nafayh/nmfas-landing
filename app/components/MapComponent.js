@@ -1,168 +1,135 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
-
-const libraries = ['places'];
+import React, { useState, useEffect } from 'react';
+import styles from '../page.module.css';
 
 const MapComponent = ({ address, name }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [coordinates, setCoordinates] = useState(null);
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-  // Check if API key is available
-  if (!apiKey || apiKey === 'your_google_maps_api_key_here') {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '450px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '12px',
-          margin: '20px 0',
-          padding: '20px',
-          textAlign: 'center'
-        }}
-      >
-        <div>
-          <p style={{ marginBottom: '10px' }}>Map loading is disabled.</p>
-          <p style={{ fontSize: '14px', color: '#666' }}>
-            Please set up your Google Maps API key in the .env.local file.
-          </p>
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              name + ' ' + address
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-block',
-              marginTop: '10px',
-              color: '#0066cc',
-              textDecoration: 'none'
-            }}
-          >
-            View on Google Maps &rarr;
-          </a>
-        </div>
-      </div>
-    );
-  }
-
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: apiKey,
-    libraries
-  });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (isLoaded && address) {
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode(
-        { address: `${name}, ${address}` },
-        (results, status) => {
-          if (status === 'OK') {
-            const { lat, lng } = results[0].geometry.location;
-            setCoordinates({ lat: lat(), lng: lng() });
+    const fetchCoordinates = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Fallback coordinates for known locations
+        const fallbackCoordinates = {
+          'Al-Madina Funeral Services': { lat: 52.4813, lon: -1.9021 }, // Birmingham City Center
+          'Al-Kawther Funeral Services': { lat: 52.4979, lon: -1.9674 }, // Smethwick, Birmingham
+          'Al-Rahma Islamic Burial Service': { lat: 52.4684, lon: -1.8498 }, // Small Heath, Birmingham
+          'Eternal Life Funeral Services': { lat: 53.7996, lon: -1.7553 }, // Bradford
+          'Cardiff Muslim Burial Council': { lat: 51.4816, lon: -3.1791 }, // Cardiff
+          'ICAS Funeral Services': { lat: 55.8642, lon: -4.2669 }, // Glasgow
+          'Manchester Central Mosque Funeral Service': { lat: 53.4970, lon: -2.2405 }, // Manchester
+          'Leeds Grand Mosque Funeral Services': { lat: 53.8008, lon: -1.5602 }, // Leeds
+          'Liverpool Muslim Burial Services': { lat: 53.4035, lon: -2.9645 }, // Liverpool
+          'Newcastle Islamic Funeral Services': { lat: 54.9783, lon: -1.6178 } // Newcastle
+        };
+
+        // First try with the full address
+        const searchAddress = encodeURIComponent(`${name} ${address}, UK`);
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${searchAddress}&limit=1&countrycodes=gb`,
+          { 
+            headers: { 'Accept-Language': 'en' },
+            // Add a slight delay to respect rate limits
+            signal: AbortSignal.timeout(5000)
+          }
+        );
+        
+        if (!response.ok) throw new Error('Failed to fetch coordinates');
+        
+        const data = await response.json();
+        
+        if (data && data[0]) {
+          // Validate the returned coordinates are in the UK
+          const lat = parseFloat(data[0].lat);
+          const lon = parseFloat(data[0].lon);
+          if (lat >= 49.8 && lat <= 58.7 && lon >= -8.2 && lon <= 1.8) {
+            setCoordinates({
+              lat: lat,
+              lon: lon
+            });
           } else {
-            console.error('Geocoding failed:', status);
+            // Use fallback coordinates if available
+            if (fallbackCoordinates[name]) {
+              setCoordinates(fallbackCoordinates[name]);
+            } else {
+              setError('Location coordinates seem incorrect');
+            }
+          }
+        } else {
+          // Try fallback coordinates
+          if (fallbackCoordinates[name]) {
+            setCoordinates(fallbackCoordinates[name]);
+          } else {
+            setError('Location not found');
           }
         }
-      );
-    }
-  }, [isLoaded, address, name]);
+      } catch (err) {
+        console.error('Error getting coordinates:', err);
+        // Try fallback coordinates on error
+        if (fallbackCoordinates[name]) {
+          setCoordinates(fallbackCoordinates[name]);
+        } else {
+          setError('Failed to load location');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (loadError) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '450px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#fff1f1',
-          borderRadius: '12px',
-          margin: '20px 0',
-          padding: '20px',
-          textAlign: 'center'
-        }}
-      >
-        <div>
-          <p style={{ marginBottom: '10px', color: '#e60000' }}>
-            Error loading the map.
-          </p>
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              name + ' ' + address
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-block',
-              marginTop: '10px',
-              color: '#0066cc',
-              textDecoration: 'none'
-            }}
-          >
-            View on Google Maps &rarr;
-          </a>
-        </div>
-      </div>
-    );
-  }
+    fetchCoordinates();
+  }, [address, name]);
 
-  if (!isLoaded) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          height: '450px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '12px',
-          margin: '20px 0'
-        }}
-      >
-        Loading map...
-      </div>
-    );
-  }
+  // Create the map URL with the marker and appropriate zoom level
+  const mapUrl = coordinates
+    ? `https://www.openstreetmap.org/export/embed.html?bbox=${parseFloat(coordinates.lon) - 0.005},${parseFloat(coordinates.lat) - 0.005},${parseFloat(coordinates.lon) + 0.005},${parseFloat(coordinates.lat) + 0.005}&layer=mapnik&marker=${coordinates.lat},${coordinates.lon}`
+    : `https://www.openstreetmap.org/export/embed.html?bbox=-5.5,50.5,1.5,56.0&layer=mapnik`;
 
   return (
-    <GoogleMap
-      mapContainerStyle={{
-        width: '100%',
-        height: '450px',
-        borderRadius: '12px',
-        margin: '20px 0'
-      }}
-      center={coordinates || { lat: 52.4862, lng: -1.8904 }}
-      zoom={16}
-      options={{
-        mapTypeControl: true,
-        streetViewControl: true,
-        fullscreenControl: true,
-        zoomControl: true,
-        mapTypeId: 'roadmap',
-        scrollwheel: true
-      }}
-    >
-      {coordinates && (
-        <Marker
-          position={coordinates}
-          icon={{
-            url: '/mosque-marker.svg',
-            scaledSize: new window.google.maps.Size(40, 40),
-            anchor: new window.google.maps.Point(20, 40)
-          }}
-          title={name}
-        />
+    <div className={styles.mapWrapper}>
+      {isLoading && (
+        <div className={styles.mapLoader}>
+          <div className={styles.mapLoaderPulse} />
+          <p>Loading map...</p>
+        </div>
       )}
-    </GoogleMap>
+      {error && (
+        <div className={styles.mapError}>
+          <p>{error}</p>
+        </div>
+      )}
+      <iframe
+        className={styles.mapFrame}
+        loading="lazy"
+        src={mapUrl}
+        title={`Map showing location of ${name}`}
+        onLoad={() => setIsLoading(false)}
+        style={{
+          width: '100%',
+          height: '350px',
+          border: 'none',
+          borderRadius: '12px',
+          opacity: isLoading ? 0 : 1,
+          transition: 'opacity 0.3s ease-in-out'
+        }}
+      />
+      {coordinates && (
+        <div className={styles.mapFooter}>
+          <a 
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name} ${address}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.viewLargerMap}
+          >
+            Get Directions on Google Maps ↗
+          </a>
+        </div>
+      )}
+    </div>
   );
 };
 

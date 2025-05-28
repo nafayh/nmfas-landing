@@ -54,18 +54,15 @@ export default function ServiceClient({ slug }) {
             <h1 className={styles.serviceTitle}>{service.name}</h1>
             <span className={styles.serviceType}>{service.type}</span>
           </div>
-          
-          <div className={styles.serviceDetails}>
+            <div className={styles.serviceDetails}>
             <div className={styles.serviceCard}>
-              <h3>📍 Location</h3>
+              <h3><span role="img" aria-label="location">📍</span> Location</h3>
               <p className={styles.addressText}>{service.address}</p>
               
-              <div className={styles.mapContainer}>
-                <MapComponent 
-                  address={service.address}
-                  name={service.name}
-                />
-              </div>
+              <MapComponent 
+                address={service.address}
+                name={service.name}
+              />
               
               <a 
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(service.name + " " + service.address)}`}
