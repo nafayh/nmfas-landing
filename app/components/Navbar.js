@@ -1,19 +1,27 @@
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from '../page.module.css';
+import MobileMenu from './MobileMenu';
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <nav className={styles.navbar}>      <div className={styles.logo}>
-        <Link href="/">NMFAS <span className={styles.logoText}>Advisory</span></Link>
+    <nav className={styles.navbar}>
+      <div className={styles.navContent}>
+        <Link href="/" className={styles.logo}>
+          NMFAS
+        </Link>
+        <div className={styles.searchBox}>
+        </div>
       </div>
-      <div className={styles.navLinks}>
-        <Link href="/services">Our Services</Link>
-        <Link href="/resources">Resources</Link>
-        <Link href="/guidance">Islamic Guidance</Link>
-        <Link href="/locations">Find Local Services</Link>
-        <Link href="/about">About</Link>
-        <button className={styles.getStartedBtn}>Get Help</button>
-      </div>
+      {isOpen && <MobileMenu onClose={() => setIsOpen(false)} />}
     </nav>
   );
 }

@@ -1,154 +1,150 @@
-        {/* Affiliates Section */}
-        <section className={styles.affiliates}>
-          <h2>Affiliated Organizations</h2>
-          <div className={styles.affiliateGrid}>
-            <div className={styles.affiliateCard}>
-              <h3>Funeral Services</h3>
-              <ul>
-                <li><a href="https://www.gardensofpeace.org.uk/" target="_blank" rel="noopener noreferrer">Gardens of Peace</a></li>
-                <li><a href="https://www.mbcc.org.uk/" target="_blank" rel="noopener noreferrer">Muslim Burial Council of Leicestershire</a></li>
-                <li><a href="https://www.greenlanemasjid.org/services/funeral/" target="_blank" rel="noopener noreferrer">Green Lane Masjid Funeral Service</a></li>
-                <li><a href="https://www.eastlondonmosque.org.uk/funeral-service/" target="_blank" rel="noopener noreferrer">East London Mosque Funeral Service</a></li>
-                <li><a href="https://www.masjidehidayah.org.uk/" target="_blank" rel="noopener noreferrer">Hadayat ul Muslimeen Mosque</a><br />
-                  <small>19 Humphrey Road, Manchester M16 9DD<br />
-                  Tel: 07958 908882</small>
-                </li>
-                <li><a href="https://www.faizaneislam.com/" target="_blank" rel="noopener noreferrer">Faizan e Islam - Funeral Services</a><br />
-                  <small>229 Ayres Road, Manchester M16 0NL<br />
-                  Tel: 0161 877 4827, 0208 281 7359<br />
-                  Email: <a href="mailto:funeral@faizaneislam.com">funeral@faizaneislam.com</a></small>
-                </li>
-              </ul>
-            </div>
-            <div className={styles.affiliateCard}>
-              <h3>Cemetery Partners</h3>
-              <ul>
-                <li><a href="https://www.gardensofpeace.org.uk/" target="_blank" rel="noopener noreferrer">Gardens of Peace Muslim Cemetery</a></li>
-                <li><a href="https://eternalgardens.org.uk/" target="_blank" rel="noopener noreferrer">Eternal Gardens</a></li>
-                <li>Five Ways Muslim Cemetery</li>
-                <li>Muslim Burial Ground Peace Garden</li>
-              </ul>
-            </div>
-            <div className={styles.affiliateCard}>
-              <h3>Support Organizations</h3>
-              <ul>
-                <li><a href="https://www.mcb.org.uk/" target="_blank" rel="noopener noreferrer">Muslim Council of Britain</a></li>
-                <li><a href="https://www.iccuk.org/" target="_blank" rel="noopener noreferrer">Islamic Cultural Centre</a></li>
-                <li><a href="https://www.muslimaid.org/" target="_blank" rel="noopener noreferrer">Muslim Aid UK</a></li>
-                <li><a href="https://www.namp-uk.org/" target="_blank" rel="noopener noreferrer">National Association of Muslim Police</a></li>
-              </ul>
-            </div>
-          </div>
-        </section>
 "use client";
 
 import Image from 'next/image';
 import styles from './page.module.css';
-import Navbar from './components/Navbar';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 
 export default function Home() {
-  // Contact form state
+  const router = useRouter();
+  const [funeralSearch, setFuneralSearch] = useState('');
+  const [cemeterySearch, setCemeterySearch] = useState('');
+  const [registrySearch, setRegistrySearch] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState({});
-  const [feedback, setFeedback] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState('');
 
-  // Add state for search results
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  function validate() {
-    const errs = {};
-    if (!form.name.trim()) errs.name = 'Name is required';
-    if (!form.email.trim()) {
-      errs.email = 'Email is required';
-    } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
-      errs.email = 'Enter a valid email';
-    }
-    if (!form.message.trim()) errs.message = 'Message is required';
-    return errs;
-  }
-
-  async function handleSubmit(e) {
+  const handleFuneralSearch = (e) => {
     e.preventDefault();
-    setFeedback('');
-    const errs = validate();
-    setErrors(errs);
-    if (Object.keys(errs).length > 0) return;
-    setSubmitting(true);
-    // Simulate async send
-    setTimeout(() => {
-      setSubmitting(false);
-      setFeedback('Thank you for contacting us! We will get back to you soon.');
-      setForm({ name: '', email: '', message: '' });
-    }, 1200);
-  }
+    router.push(`/search?q=${encodeURIComponent(funeralSearch)}&type=funeral`);
+  };
 
-  // Function to handle search
-  const handleFuneralSearch = () => {
-    if (searchQuery.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+  const handleCemeterySearch = (e) => {
+    e.preventDefault();
+    if (cemeterySearch.trim()) {
+      router.push(`/search?q=${encodeURIComponent(cemeterySearch)}&type=cemetery`);
     }
+  };
+
+  const handleRegistrySearch = (e) => {
+    e.preventDefault();
+    if (registrySearch.trim()) {
+      router.push(`/search?q=${encodeURIComponent(registrySearch)}&type=registry`);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setErrors({});
+
+    // Basic validation
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = 'Name is required';
+    if (!form.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(form.email)) newErrors.email = 'Email is invalid';
+    if (!form.message.trim()) newErrors.message = 'Message is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setSubmitting(false);
+      return;
+    }
+
+    // TODO: Implement actual form submission
+    // For now, just simulate a submission
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setFeedback('Thank you for your message. We will get back to you soon.');
+    setForm({ name: '', email: '', message: '' });
+    setSubmitting(false);
   };
 
   return (
     <div className={styles.container}>
-      <Navbar />
-      <main>
-        {/* Hero Section */}
-        <section className={styles.hero}>
-          <h1>Difficult Times, Made Easier</h1>
-          <p>Find Muslim funeral services, cemeteries, and support in your area</p>
-          
-          {/* Search container */}
-          <div className={styles.searchContainer}>
-            <div className={styles.searchBox}>
+      {/* Custom Hero with Full Background and Navigation */}
+      <section className={styles.heroLanding}>
+        <div className={styles.heroOverlay} />
+        <nav className={styles.heroNav}>
+          <div className={styles.logo}>NMFAS <span className={styles.logoSub}>Advisory</span></div>
+          <ul className={styles.heroNavLinks}>
+            <li><a href="#" className={styles.active}>Home</a></li>
+            <li><a href="#guides">Guides</a></li>
+            <li><a href="#directories">Directories</a></li>
+            <li><a href="#support">Support Services</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#affiliations">Affiliations</a></li>
+            <li><a href="#faqs">FAQ</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          </ul>
+          <a href="#contact" className={styles.getHelpBtn}>Get Help</a>
+        </nav>
+
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>Difficult Times, Made Easier</h1>
+          <p className={styles.heroSubtitle}>
+            Find Muslim funeral services, cemeteries, and support in your area
+          </p>
+          <div className={styles.landingSearchGrid}>
+            {/* Funeral Service Search */}
+            <div className={styles.landingCard}>
               <h3>Find a Funeral Service</h3>
-              <div className={styles.searchInputGroup}>
-                <input 
-                  type="text" 
+              <form onSubmit={handleFuneralSearch} className={styles.landingForm}>
+                <input
+                  type="text"
+                  name="funeral"
                   placeholder="Enter your city or postcode"
-                  className={styles.searchInput}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleFuneralSearch()}
+                  value={funeralSearch}
+                  onChange={e => setFuneralSearch(e.target.value)}
+                  className={styles.landingInput}
                 />
-                <button className={styles.searchBtn} onClick={handleFuneralSearch}>Search</button>
-              </div>
+                <button type="submit" className={styles.landingBtn}>
+                  Search
+                </button>
+              </form>
             </div>
 
-            <div className={styles.searchBox}>
+            {/* Results will be shown on the search page */}
+            
+            {/* Cemetery Search */}
+            <div className={styles.landingCard}>
               <h3>Find a Cemetery</h3>
-              <div className={styles.searchInputGroup}>
-                <input 
-                  type="text" 
+              <form onSubmit={handleCemeterySearch} className={styles.landingForm}>
+                <input
+                  type="text"
+                  name="cemetery"
                   placeholder="Enter your city or postcode"
-                  className={styles.searchInput}
+                  value={cemeterySearch}
+                  onChange={e => setCemeterySearch(e.target.value)}
+                  className={styles.landingInput}
                 />
-                <button className={styles.searchBtn}>Search</button>
-              </div>
+                <button type="submit" className={styles.landingBtn}>
+                  Search
+                </button>
+              </form>
             </div>
-
-            <div className={styles.searchBox}>
+            {/* Registry Office */}
+            <div className={styles.landingCard}>
               <h3>Find Registry Office</h3>
-              <a href="https://www.gov.uk/register-offices" className={styles.searchLink}>
-                <div className={styles.searchInputGroup}>
-                  <input 
-                    type="text" 
-                    placeholder="Visit gov.uk website"
-                    className={styles.searchInput}
-                    disabled
-                  />
-                  <button className={styles.searchBtn}>Visit Gov.uk</button>
-                </div>
+              <a
+                href="https://www.gov.uk/register-offices"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.landingBtnGov}
+              >
+                Visit Gov
               </a>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
         {/* General Guides Section */}
-        <section className={styles.guides}>
+        <section id="guides" className={styles.guides}>
+        {/* Directories Section (Placeholder) */}
+
             <h2>General Guides</h2>
             <div className={styles.guidesGrid}>
               <div className={styles.guideCard}>
@@ -217,6 +213,13 @@ export default function Home() {
 
         {/* About Section */}
         <section id="about" className={styles.about}>
+        {/* Affiliations Section (Placeholder) */}
+        <section id="affiliations" className={styles.affiliations}>
+          <div className={styles.sectionWrapper}>
+            <h2>Affiliations</h2>
+            <p>NMFAS is proud to be affiliated with leading Muslim organizations and funeral service providers across the UK. (Coming soon)</p>
+          </div>
+        </section>
           <div className={styles.sectionWrapper}>
             <h2>About Us</h2>
             <div className={styles.aboutContent}>
@@ -340,7 +343,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </main>
+
 
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
