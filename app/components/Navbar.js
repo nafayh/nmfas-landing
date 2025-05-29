@@ -1,27 +1,64 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import styles from '../page.module.css';
-import MobileMenu from './MobileMenu';
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+const Navbar = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 50;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+    // Prevent body scroll when menu is open
+    if (!mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
   };
-
   return (
-    <nav className={styles.navbar}>
+    <nav className={`${styles.navbar} ${scrolled ? styles.scrolledNav : ''} ${isHomePage ? styles.homeNav : styles.innerNav}`}>
       <div className={styles.navContent}>
         <Link href="/" className={styles.logo}>
-          NMFAS
+          <span className={styles.nmfas}>NMFAS</span>
+          <span className={styles.advisory}>Advisory</span>
         </Link>
-        <div className={styles.searchBox}>
+
+        <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div className={`${styles.navLinks} ${mobileMenuOpen ? styles.mobileActive : ''}`}>
+          <Link href="/">Home</Link>
+          <Link href="/guides">Guides</Link>
+          <Link href="/service/search">Directories</Link>
+          <Link href="/support-services">Support Services</Link>
+          <Link href="/about">About Us</Link>
+          <Link href="/affiliations">Affiliations</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/contact" className={styles.getHelp}>Contact Us</Link>
         </div>
       </div>
-      {isOpen && <MobileMenu onClose={() => setIsOpen(false)} />}
     </nav>
   );
-}
+};
+
+export default Navbar;

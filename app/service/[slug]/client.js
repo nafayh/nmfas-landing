@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from '../../page.module.css';
 import Link from 'next/link';
-import { createSlug } from '../../utils/urlUtils';
+import { createServiceSlug } from '../../utils/mapUtils';
 import { getLatestListings } from '../../utils/dataUtils';
 import Navbar from '../../components/Navbar';
 import MapComponent from '../../components/MapComponent';
@@ -11,11 +11,10 @@ import MapComponent from '../../components/MapComponent';
 export default function ServiceClient({ slug }) {
   const [service, setService] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const listings = getLatestListings();
     const foundService = listings.find(s => 
-      createSlug(s.name).toLowerCase() === slug?.toLowerCase()
+      createServiceSlug(s.name).toLowerCase() === slug?.toLowerCase()
     );
     
     setService(foundService);
