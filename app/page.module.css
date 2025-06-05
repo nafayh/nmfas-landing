@@ -1,3 +1,18 @@
+.advisoryBanner {
+  background-color: #004d40;
+  color: white;
+  text-align: center;
+  padding: 8px 15px;
+  font-size: 1rem;
+  line-height: 1.5;
+  z-index: 1500;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .container {
   font-family: 'Segoe UI', sans-serif;
   padding: 0;
@@ -671,7 +686,7 @@
 .navbar {
   background-color: transparent;
   position: fixed;
-  top: 0;
+  top: 42px; /* Adjusted to account for the advisory banner */
   left: 0;
   right: 0;
   z-index: 1000;
@@ -839,14 +854,20 @@
 }
 
 @media (max-width: 1024px) {
+  .advisoryBanner {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+  }
+  
   .mobileMenuToggle {
     display: flex;
   }
+  
   .navLinks {
     position: fixed;
     flex-direction: column;
     align-items: center;
-    top: 70px;
+    top: 112px; /* Adjusted to account for banner + navbar on mobile */
     left: 0;
     right: 0;
     background-color: rgba(45, 55, 72, 0.95);
@@ -888,6 +909,16 @@
 }
 
 @media (max-width: 768px) {
+  .advisoryBanner {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    padding: 5px 8px;
+  }
+
+  .navbar {
+    top: 37px; /* Adjusted for smaller banner on mobile */
+  }
+  
   .header {
     flex-direction: column;
     align-items: flex-start;
@@ -962,6 +993,7 @@
 
 .mainContent {
   min-height: 100vh;
+  margin-top: 42px; /* Adjusted to account for advisory banner */
 }
 
 /* Only add padding to elements that are not the hero section */

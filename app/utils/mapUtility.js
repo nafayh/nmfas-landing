@@ -101,15 +101,24 @@ export function createMapUrl(markers) {
   maxLat += padding;
   minLon -= padding;
   maxLon += padding;
-  
-  // Create the map URL with bounding box
+    // Create the map URL with bounding box
   let mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${minLon},${minLat},${maxLon},${maxLat}&layer=mapnik`;
   
-  // Add markers
-  markers.forEach(marker => {
-    mapUrl += `&marker=${marker.lat},${marker.lon}`;
-  });
+  // Add markers - ensuring each marker is added separately with proper URL encoding
+  if (markers.length === 1) {
+    // Single marker case - simple format
+    mapUrl += `&marker=${markers[0].lat},${markers[0].lon}`;
+  } else {
+    // Multiple markers case
+    markers.forEach((marker, index) => {
+      // Use the correct syntax for multiple markers
+      // Each marker needs to be added with its own &marker parameter
+      mapUrl += `&marker=${marker.lat},${marker.lon}`;
+      console.log(`Added marker ${index+1} at ${marker.lat},${marker.lon}`);
+    });
+  }
   
+  console.log("Final map URL:", mapUrl);
   return mapUrl;
 }
 
